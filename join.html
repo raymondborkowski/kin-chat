@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join your family on Kin-Chat</title>
+<meta property="og:title" content="You're invited to Kin-Chat">
+<meta property="og:description" content="Your family's birthdays, wishlists and plans, in one place.">
+<meta property="og:image" content="https://raymondborkowski.github.io/kin-chat/icon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  main { text-align: center; padding-top: 48px; }
+  .icon { margin: 0 auto 16px; }
+  .code { font: 700 34px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 6px; padding: 18px; border-radius: 18px;
+          background: rgba(127,127,127,.12); margin: 20px 0 8px; }
+  .steps { text-align: left; margin: 28px auto 0; max-width: 420px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; margin: 18px 0; }
+  .num { flex: none; width: 30px; height: 30px; border-radius: 15px; background: var(--accent); color: #fff; font-weight: 700;
+         display: flex; align-items: center; justify-content: center; }
+  .button { display: block; text-align: center; text-decoration: none; font-weight: 600; font-size: 18px; padding: 15px 20px;
+            border-radius: 16px; margin-top: 10px; background: var(--accent); color: #fff; }
+  .button.secondary { background: rgba(127,127,127,.14); color: var(--text); }
+  .small { font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<img class="icon" src="icon.png" alt="" width="88" height="88">
+<h1>You're invited!</h1>
+<p class="lede">Your family keeps birthdays, wishlists and plans on Kin-Chat.</p>
+
+<div id="has-code">
+  <div class="code" id="code"></div>
+  <p class="small">Your family code</p>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div style="flex:1">
+      <strong>Get Kin-Chat</strong>
+      <div class="small">Free, through Apple's TestFlight app. Tapping this also copies your code.</div>
+      <a class="button" id="get" href="https://testflight.apple.com/join/9fxE4G1s">Get Kin-Chat</a>
+    </div></div>
+    <div class="step"><div class="num">2</div><div style="flex:1">
+      <strong>Come back and open it</strong>
+      <div class="small">You'll sign in with Apple and tap your name. That's it.</div>
+      <a class="button secondary" id="open" href="kinchat://join">Open Kin-Chat</a>
+    </div></div>
+  </div>
+</div>
+
+<p id="no-code" class="small" hidden>This invite link is missing its code. Ask whoever invited you to send it again.</p>
+<p class="small" style="margin-top:36px"><a href="index.html">What is Kin-Chat?</a> · <a href="privacy.html">Privacy</a></p>
+</main>
+<script>
+  const code = (new URLSearchParams(location.search).get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+  if (code.length < 6) {
+    document.getElementById("has-code").hidden = true;
+    document.getElementById("no-code").hidden = false;
+  } else {
+    document.getElementById("code").textContent = code;
+    document.getElementById("open").href = "kinchat://join?code=" + code;
+    // Copy the code on the way to TestFlight, so the app can paste it after installing.
+    document.getElementById("get").addEventListener("click", () => { navigator.clipboard?.writeText(code).catch(() => {}); });
+  }
+</script>
+</body>
+</html>
