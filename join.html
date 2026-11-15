@@ -51,7 +51,7 @@
 <p class="small" style="margin-top:36px"><a href="index.html">What is Kin-Chat?</a> · <a href="privacy.html">Privacy</a></p>
 </main>
 <script>
-  const code = (new URLSearchParams(location.search).get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+  const code = (new URLSearchParams(location.search).get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
   if (code.length < 6) {
     document.getElementById("has-code").hidden = true;
     document.getElementById("no-code").hidden = false;
