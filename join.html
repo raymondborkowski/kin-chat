@@ -29,6 +29,24 @@
 <h1>You're invited!</h1>
 <p class="lede">Your family keeps birthdays, wishlists and plans on Kin-Chat.</p>
 
+<div id="has-invite" hidden>
+  <a class="button" id="open-invite" href="kinchat://join">Open Kin-Chat</a>
+  <p class="small">This link is just for you. Sign in with Apple and you're in, no code needed.</p>
+
+  <div class="steps">
+    <p class="small" style="text-align:center">Don't have Kin-Chat yet?</p>
+    <div class="step"><div class="num">1</div><div style="flex:1">
+      <strong>Get Kin-Chat</strong>
+      <div class="small">Free, through Apple's TestFlight app. Install TestFlight, then tap "Accept" and "Install".</div>
+      <a class="button secondary" id="get-invite" href="https://testflight.apple.com/join/9fxE4G1s">Get Kin-Chat</a>
+    </div></div>
+    <div class="step"><div class="num">2</div><div style="flex:1">
+      <strong>Tap your invite link again</strong>
+      <div class="small">Go back to the message you were sent and tap the link once more. Kin-Chat opens ready for you.</div>
+    </div></div>
+  </div>
+</div>
+
 <div id="has-code">
   <div class="code" id="code"></div>
   <p class="small">Your family code</p>
@@ -51,8 +69,20 @@
 <p class="small" style="margin-top:36px"><a href="index.html">What is Kin-Chat?</a> · <a href="privacy.html">Privacy</a></p>
 </main>
 <script>
-  const code = (new URLSearchParams(location.search).get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
-  if (code.length < 6) {
+  const params = new URLSearchParams(location.search);
+  // A personal invite: the token only ever goes to the app, never anywhere else.
+  const invite = (params.get("invite") || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
+  const code = (params.get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+  if (invite.length >= 16) {
+    document.getElementById("has-code").hidden = true;
+    document.getElementById("has-invite").hidden = false;
+    document.querySelector(".lede").textContent = "Someone in your family saved you a spot on Kin-Chat, for birthdays, wishlists and plans.";
+    document.getElementById("open-invite").href = "kinchat://join?invite=" + invite;
+    // Copied on the way to TestFlight too, so it can be pasted into the app if tapping the link again isn't handy.
+    document.getElementById("get-invite").addEventListener("click", () => {
+      navigator.clipboard?.writeText(location.href).catch(() => {});
+    });
+  } else if (code.length < 6) {
     document.getElementById("has-code").hidden = true;
     document.getElementById("no-code").hidden = false;
   } else {
